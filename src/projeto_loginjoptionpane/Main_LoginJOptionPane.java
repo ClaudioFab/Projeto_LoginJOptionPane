@@ -1,94 +1,98 @@
 
-/*
-Exercício – Login com JOptionPane 
-
-Crie um programa em Java utilizando a classe JOptionPane que faça o seguinte: 
-
-1. Solicite ao usuário que informe: //
-* Login //
-* Senha //
-
-2. O sistema deve verificar: //
-* Login correto: admin //
-* Senha correta: 1313 //
-
-3. Se o login e a senha estiverem corretos: //
-* Mostrar a mensagem: "Login realizado com sucesso!" //
-
-4. Caso contrário: 
-* Mostrar a mensagem: "Login ou senha inválidos." //
-* Utilize apenas caixas de diálogo (JOptionPane), não utilize System.out.println. //
-
-Extra:
-Limitar tentativas 
-Usar showConfirmDialog após erro 
-Criar menu inicial (Entrar / Sair) 
-Validar campo vazio 
-
-*/
-
-
-
 package projeto_loginjoptionpane;
-
 import javax.swing.JOptionPane;
-
 public class Main_LoginJOptionPane {
-
     public static void main(String[] args) {
-        Iniciando();
+        PainelLogin();
     }
-    
-    
-    public static void Iniciando() {
+    public static void PainelLogin() {
         JOptionPane.showMessageDialog(null,"Exercício\nLogin com JOptionPane ","Iniciando",JOptionPane.INFORMATION_MESSAGE);
         
+        //Criando menu inicial (Entrar / Sair).
         String[] varia = {"Entrar","Sair"};
         int escolha = JOptionPane.showOptionDialog(null,"Deseja logar sua conta ? ","Escolhendo",JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE,null,varia,varia[0]);
 
+        //Iniciando caso escolha entrar no menu inicial.
         if(escolha == 0){
-            String login01="";
-            int senha01=0;
+            //variaveis principais do loop.
+            String login01,senha;
+            int senha01=0,cont=0;
 
-            
             while (true) {
+                //Solicitando ao usuário que informe login.
+                login01 = JOptionPane.showInputDialog(null,"Digite seu Login: ","Login",JOptionPane.QUESTION_MESSAGE);
 
-                login01 = JOptionPane.showInputDialog(null,"Informe seu Login e Senha\n\nLogin","Login: ",JOptionPane.QUESTION_MESSAGE);
-
+                //Encerrando ao escolher cancelar no login.
                 if (login01 == null) {
-                    JOptionPane.showMessageDialog(null, "Programa finalizado.", "Obrigado", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Programa finalizado.", "Encerrando", JOptionPane.INFORMATION_MESSAGE);
+                    System.exit(0);
+
+                //Validando campo vazio no login como um erro. 
+                //Usando showConfirmDialog após situações de erro.
+                }else if(login01.isEmpty()){
+                    int erro01 = JOptionPane.showConfirmDialog(null,"Nada foi digitado!\nDeseja tentar novamente?","Erro!",JOptionPane.YES_NO_OPTION,JOptionPane.ERROR_MESSAGE);
+                    if(erro01 == 0){
+                        continue;
+                    }else if(erro01 == 1){            
+                        JOptionPane.showMessageDialog(null, "Programa finalizado.", "Encerrando", JOptionPane.INFORMATION_MESSAGE);
+                        System.exit(0);     
+                    }
+                }
+                
+                //Solicitando ao usuário que informe senha.
+                senha = JOptionPane.showInputDialog(null,"Digite sua Senha: ","Senha",JOptionPane.QUESTION_MESSAGE);
+                
+                //Encerrando ao escolher cancelar na senha.
+                if (senha == null) {
+                    JOptionPane.showMessageDialog(null, "Programa finalizado.", "Encerrando", JOptionPane.INFORMATION_MESSAGE);
                     System.exit(0);
                 }
-                
-                senha01 = Integer.parseInt(JOptionPane.showInputDialog(null,"Informe seu Login e Senha\n\nSenha: ","Senha",JOptionPane.QUESTION_MESSAGE));
 
-                //RESOLVER A QUESTÃO DE CONVERSÃO
-//                if (senha01 == null) {
-//                    JOptionPane.showMessageDialog(null, "Programa finalizado.", "Obrigado", JOptionPane.INFORMATION_MESSAGE);
-//                    System.exit(0);
-//                }
+                //Impedimento de usar letras/simbolos/espaço vazio na senha.
+                try {                    
+                    senha01 = Integer.parseInt(senha);
+                } catch (NumberFormatException e) {
 
-                
-                
-                if(login01.equals("admin") && senha01 == 1313){
-                    break;  
-                }else if(login01.equals("admin") && senha01 != 1313){
-                    JOptionPane.showMessageDialog(null,"Senha Inválida!\nTente Novamente!","Erro Senha",JOptionPane.ERROR_MESSAGE);  
-                }else if(login01 !="admin" && senha01 == 1313){
-                    JOptionPane.showMessageDialog(null,"Login Inválido!\nTente Novamente!","Erro Login",JOptionPane.ERROR_MESSAGE);
-                }else{
-                    JOptionPane.showMessageDialog(null,"Login e Senha Inválidos!\nTente Novamente!","Erro",JOptionPane.ERROR_MESSAGE);
+                    int erro01 = JOptionPane.showConfirmDialog(null,"A senha deve conter apenas números!\nDeseja tentar novamente?","Erro!",JOptionPane.YES_NO_OPTION,JOptionPane.ERROR_MESSAGE);
+                    if(erro01 == 0){
+                        continue;
+                    }else if(erro01 == 1){            
+                        JOptionPane.showMessageDialog(null, "Programa finalizado.", "Encerrando", JOptionPane.INFORMATION_MESSAGE);
+                        System.exit(0);     
+                    }
+    
                 }
-                
-                
-                
+
+                //Conferindo login e senha.
+                if(login01.equals("admin") && senha01 == 1313){
+                    break;
+                    
+                //Mostrando mensagem de Login ou senha inválidos.
+                }else{
+                        //Limitador de tentativas.
+                        cont++;
+                        if(cont > 2){
+                            JOptionPane.showMessageDialog(null,"Login ou Senha Inválidos!\nTentativas: "+cont+"\nNúmero máximo de tentativas atingido!\nTente novamente mais tarde.","Aviso",JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Programa finalizado.", "Encerrando", JOptionPane.INFORMATION_MESSAGE);
+                            System.exit(0); 
+                        }
+                        
+                    int erro01 = JOptionPane.showConfirmDialog(null,"Login ou Senha Inválidos!\nTentativas: "+cont+"\nDeseja tentar novamente?","Erro!",JOptionPane.YES_NO_OPTION,JOptionPane.ERROR_MESSAGE);
+                    if(erro01 == 0){
+                        continue;                        
+                        
+                    }else if(erro01 == 1){            
+                        JOptionPane.showMessageDialog(null, "Programa finalizado.", "Encerrando", JOptionPane.INFORMATION_MESSAGE);
+                        System.exit(0);     
+                    }
+                }
             }
-            
-            
+
             //Resposta após Login e Senha corretos.
             JOptionPane.showMessageDialog(null,"Login realizado com sucesso!","Logando conta",JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
-        //Caso escolha sair no menu inicial.
+
+        //Encerrando caso escolha sair no menu inicial.    
         }else if(escolha == 1){
             JOptionPane.showMessageDialog(null, "Programa finalizado.","Encerrando", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
